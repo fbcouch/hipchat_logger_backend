@@ -17,7 +17,7 @@ defmodule HipchatLoggerBackend.Mixfile do
   end
 
   def application do
-    [applications: [:logger, :httpoison, :romeo],
+    [applications: [:logger, :httpoison],
     mod: {HipchatLoggerBackend, []}]
   end
 
@@ -26,8 +26,7 @@ defmodule HipchatLoggerBackend.Mixfile do
       {:httpoison, "~> 0.8"},
       {:poison, "~> 1.3"},
       {:excoveralls, "~> 0.4", only: :test},
-      {:ex_doc, "~> 0.11", only: :dev},
-      {:romeo, "~> 0.5.0"}
+      {:ex_doc, "~> 0.11", only: :dev}
     ]
   end
 

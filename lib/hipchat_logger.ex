@@ -1,7 +1,5 @@
 defmodule HipchatLogger do
   require Logger
-  alias Romeo.Stanza
-  alias Romeo.Connection, as: Conn
 
   @moduledoc """
   Does the actual work of posting to HipChat.
@@ -22,6 +20,7 @@ defmodule HipchatLogger do
 
   @doc false
   def handle_event({level, _pid, {Logger, message, _timestamp, detail}}, state) do
+    IO.inspect level
     levels = case Application.get_env(:hipchat_logger_backend, :levels) do
       nil ->
         [:error] # by default only log error level messages
@@ -42,50 +41,65 @@ defmodule HipchatLogger do
 
   defp handle_event(level, message, [pid: _, application: application, module: module, function: function, file: file, line: line]) do
     """
-      An event has occurred: _#{message}_
-      *Level*: #{level}
-      *Application*: #{application}
-      *Module*: #{module}
-      *Function*: #{function}
-      *File*: #{file}
-      *Line*: #{line}
-    """ |> send_event
+      <strong>#{message}</strong><br>
+      <i>Level</i>: #{level}<br>
+      <i>Application</i>: #{application}<br>
+      <i>Module</i>: #{module}<br>
+      <i>Function</i>: #{function}<br>
+      <i>File</i>: #{file}<br>
+      <i>Line</i>: #{line}<br>
+    """ |> send_event(level)
   end
 
   defp handle_event(level, message, [pid: _, module: module, function: function, file: file, line: line]) do
     """
-      An event has occurred: _#{message}_
-      *Level*: #{level}
-      *Module*: #{module}
-      *Function*: #{function}
-      *File*: #{file}
-      *Line*: #{line}
-    """ |> send_event
+      <strong>#{message}</strong><br>
+      <i>Level</i>: #{level}<br>
+      <i>Module</i>: #{module}<br>
+      <i>Function</i>: #{function}<br>
+      <i>File</i>: #{file}<br>
+      <i>Line</i>: #{line}<br>
+    """ |> send_event(level)
+  end
+
+  defp handle_event(level, message, details) do
+    """
+      <strong>#{message}</strong><br>
+      <i>Level</i>: #{level}<br>
+    """ |> send_event(level)
   end
 
   defp handle_event(_, _, _) do
     :noop
   end
 
-  def send_event(text) do
-    # Start the client
-    {:ok, pid} = Conn.start_link(@opts)
-
-    # # Send presence to the server
-    # :ok = Conn.send(pid, Stanza.presence)
-    #
-    # # Request your roster
-    # :ok = Conn.send(pid, Stanza.get_roster)
-    #
-    # # Join a chat room
-    # :ok = Conn.send(pid, Stanza.join(@opts[:room], @opts[:nickname]))
-
-    # Send a message to the room
-    IO.inspect @opts[:rooms]
-    @opts[:rooms]
-    |> Enum.each(fn room ->
-      :ok = Conn.send(pid, Stanza.join(elem(room, 0), @opts[:nickname]))
-      :ok = Conn.send(pid, Stanza.groupchat(room, text))
-    end)
+  defp send_event(html, level) do
+    {:ok, body} = Poison.encode %{
+      from: @opts[:from],
+      message_format: "html",
+      message: html,
+      color: color(level)
+    }
+    HTTPoison.post(endpoint, body, headers)
   end
+
+  defp endpoint do
+    "https://api.hipchat.com/v2/room/#{@opts[:room]}/notification"
+  end
+
+  defp headers do
+    %{
+      "Authorization" => "Bearer #{@opts[:token]}",
+      "Content-Type" => "application/json"
+    }
+  end
+
+  defp color(:error),
+    do: "red"
+
+  defp color(:warn),
+    do: "yellow"
+
+  defp color(_),
+    do: "gray"
 end

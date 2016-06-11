@@ -20,6 +20,15 @@ end
 
 Then run `$ mix do deps.get, compile` to download and compile your dependencies.
 
+Configure your hipchat credentials
+
+```elixir
+config :hipchat_logger_backend, :hipchat,
+  token: "my_api_token",
+  room: "my_room",
+  from: "Test App"
+```
+
 Finally, add the `:hipchat_logger_backend` application as your list of applications in `mix.exs`:
 
 ```elixir
