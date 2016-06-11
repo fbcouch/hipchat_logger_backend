@@ -5,7 +5,7 @@ defmodule HipchatLoggerBackend.Mixfile do
     [
       app: :hipchat_logger_backend,
       description: "A logger backend for posting errors to HipChat.",
-      version: "0.1.0",
+      version: "0.1.1",
       elixir: "~> 1.2",
       build_embedded: Mix.env == :prod,
       start_permanent: Mix.env == :prod,
@@ -26,7 +26,8 @@ defmodule HipchatLoggerBackend.Mixfile do
       {:httpoison, "~> 0.8"},
       {:poison, "~> 1.3"},
       {:excoveralls, "~> 0.4", only: :test},
-      {:ex_doc, "~> 0.11", only: :dev}
+      {:ex_doc, "~> 0.11", only: :dev},
+      {:markdown, github: "devinus/markdown", only: :dev}
     ]
   end
 
