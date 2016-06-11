@@ -1,11 +1,11 @@
-defmodule SlackLoggerBackend.Mixfile do
+defmodule HipchatLoggerBackend.Mixfile do
   use Mix.Project
 
   def project do
     [
-      app: :slack_logger_backend,
-      description: "A logger backend for posting errors to Slack.",
-      version: "0.1.4",
+      app: :hipchat_logger_backend,
+      description: "A logger backend for posting errors to HipChat.",
+      version: "0.1.0",
       elixir: "~> 1.2",
       build_embedded: Mix.env == :prod,
       start_permanent: Mix.env == :prod,
@@ -18,7 +18,7 @@ defmodule SlackLoggerBackend.Mixfile do
 
   def application do
     [applications: [:logger, :httpoison],
-    mod: {SlackLoggerBackend, []}]
+    mod: {HipchatLoggerBackend, []}]
   end
 
   defp deps do
@@ -26,12 +26,8 @@ defmodule SlackLoggerBackend.Mixfile do
       {:httpoison, "~> 0.8"},
       {:poison, "~> 1.3"},
       {:excoveralls, "~> 0.4", only: :test},
-      {:earmark, "~> 0.2", only: :dev},
       {:ex_doc, "~> 0.11", only: :dev},
-      {:dialyxir, "~> 0.3", only: :dev},
-      {:credo, "~> 0.4", only: :docs},
-      {:bypass, "~> 0.1", only: :test},
-      {:inch_ex, "~> 0.5", only: :docs}
+      {:credo, "~> 0.4", only: :docs}
     ]
   end
 
@@ -39,8 +35,8 @@ defmodule SlackLoggerBackend.Mixfile do
     [
       files: ["lib", "mix.exs", "README*"],
       licenses: ["MIT"],
-      maintainers: ["Craig Paterson"],
-      links: %{"Github" => "https://github.com/craigp/slack_logger_backend"}
+      maintainers: ["Jami Couch"],
+      links: %{"Github" => "https://github.com/fbcouch/hipchat_logger_backend"}
     ]
   end
 end

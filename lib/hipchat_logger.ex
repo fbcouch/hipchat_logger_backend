@@ -1,13 +1,11 @@
-defmodule SlackLogger do
+defmodule HipchatLogger do
   require Logger
 
   @moduledoc """
-  Does the actual work of posting to Slack.
+  Does the actual work of posting to HipChat.
   """
 
   use GenEvent
-
-  @env_webhook "SLACK_LOGGER_WEBHOOK_URL"
 
   @doc false
   def init(__MODULE__) do
@@ -21,7 +19,7 @@ defmodule SlackLogger do
 
   @doc false
   def handle_event({level, _pid, {Logger, message, _timestamp, detail}}, state) do
-    levels = case Application.get_env(:slack_logger_backend, :levels) do
+    levels = case Application.get_env(:hipchat_logger_backend, :levels) do
       nil ->
         [:error] # by default only log error level messages
       levels ->
@@ -40,12 +38,7 @@ defmodule SlackLogger do
   end
 
   defp get_url do
-    case System.get_env(@env_webhook) do
-      nil ->
-        Application.get_env(:slack_logger_backend, :slack)[:url]
-      url ->
-        url
-    end
+    ""
   end
 
   defp handle_event(level, message, [pid: _, application: application, module: module, function: function, file: file, line: line]) do

@@ -1,12 +1,12 @@
 ExUnit.start
 
-defmodule SlackLoggerTest do
+defmodule HipchatLoggerTest do
   use ExUnit.Case
   require Logger
 
   setup do
     bypass = Bypass.open
-    Application.put_env :slack_logger_backend, :slack, [url: "http://localhost:#{bypass.port}/hook"]
+    Application.put_env :hipchat_logger_backend, :slack, [url: "http://localhost:#{bypass.port}/hook"]
     System.put_env "SLACK_LOGGER_WEBHOOK_URL", "http://localhost:#{bypass.port}/hook"
     {:ok, %{bypass: bypass}}
   end
@@ -23,9 +23,9 @@ defmodule SlackLoggerTest do
   end
 
   test "doesn't post a debug message to Slack if the level is not set", %{bypass: bypass} do
-    Application.put_env :slack_logger_backend, :levels, [:info]
+    Application.put_env :hipchat_logger_backend, :levels, [:info]
     on_exit fn ->
-      Application.put_env :slack_logger_backend, :levels, [:debug, :info, :warn, :error]
+      Application.put_env :hipchat_logger_backend, :levels, [:debug, :info, :warn, :error]
     end
 
     Bypass.expect bypass, fn _conn ->
