@@ -14,7 +14,7 @@ First, add the client to your `mix.exs` dependencies:
 
 ```elixir
 def deps do
-  [{:hipchat_logger_backend, "~> 0.0.1"}]
+  [{:hipchat_logger_backend, "~> 0.1.0"}]
 end
 ```
 

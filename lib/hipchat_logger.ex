@@ -20,7 +20,6 @@ defmodule HipchatLogger do
 
   @doc false
   def handle_event({level, _pid, {Logger, message, _timestamp, detail}}, state) do
-    IO.inspect level
     levels = case Application.get_env(:hipchat_logger_backend, :levels) do
       nil ->
         [:error] # by default only log error level messages
