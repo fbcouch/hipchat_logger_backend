@@ -35,8 +35,12 @@ defmodule HipchatLoggerBackend do
 
   @doc false
   def start(_, _) do
+    import Supervisor.Spec, warn: false
     Logger.add_backend(HipchatLogger)
-    {:ok, self}
+
+    children = []
+    opts = [strategy: :one_for_one, name: HipchatLoggerBackend.Supervisor]
+    Supervisor.start_link(children, opts)
   end
 
   @doc false

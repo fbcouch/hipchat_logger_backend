@@ -5,7 +5,7 @@ defmodule HipchatLoggerBackend.Mixfile do
     [
       app: :hipchat_logger_backend,
       description: "A logger backend for posting errors to HipChat.",
-      version: "0.1.2",
+      version: "0.1.3",
       elixir: "~> 1.2",
       build_embedded: Mix.env == :prod,
       start_permanent: Mix.env == :prod,
